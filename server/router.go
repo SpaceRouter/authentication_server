@@ -2,6 +2,7 @@ package server
 
 import (
 	"authentification_server/controllers"
+	"authentification_server/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +19,12 @@ func NewRouter() *gin.Engine {
 	{
 		pam := controllers.PamController{}
 		v1.POST("/login", pam.Authenticate)
+
+		admin := v1.Group("/admin")
+		{
+			admin.Use(middlewares.AuthMiddleware())
+			admin.GET("/info", middlewares.GetInfo)
+		}
 	}
 	return router
 
