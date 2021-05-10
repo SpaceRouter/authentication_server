@@ -1,8 +1,8 @@
 package server
 
 import (
-	"authentification_server/controllers"
-	"authentification_server/middlewares"
+	"authentication_server/controllers"
+	"authentication_server/middlewares"
 	"github.com/gin-gonic/gin"
 )
 

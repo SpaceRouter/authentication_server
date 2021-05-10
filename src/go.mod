@@ -1,4 +1,4 @@
-module authentification_server
+module authentication_server
 
 go 1.14
 

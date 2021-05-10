@@ -1,8 +1,8 @@
 package main
 
 import (
-	"authentification_server/config"
-	"authentification_server/server"
+	"authentication_server/config"
+	"authentication_server/server"
 	"flag"
 	"fmt"
 	"log"

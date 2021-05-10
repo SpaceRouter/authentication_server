@@ -1,6 +1,6 @@
 package server
 
-import "authentification_server/config"
+import "authentication_server/config"
 
 func Init() error {
 	configs := config.GetConfig()

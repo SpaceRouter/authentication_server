@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"authentification_server/config"
-	"authentification_server/models"
+	"authentication_server/config"
+	"authentication_server/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"

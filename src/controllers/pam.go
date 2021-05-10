@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"authentification_server/middlewares"
-	"authentification_server/models"
+	"authentication_server/middlewares"
+	"authentication_server/models"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/msteinert/pam"
