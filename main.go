@@ -1,38 +1,24 @@
 package main
 
 import (
-	"errors"
-	"github.com/msteinert/pam"
+	"authentification_server/config"
+	"authentification_server/server"
+	"flag"
+	"fmt"
 	"log"
+	"os"
 )
 
-type Credentials struct {
-	User     string
-	Password string
-}
-
-func (c Credentials) RespondPAM(s pam.Style, msg string) (string, error) {
-	switch s {
-	case pam.PromptEchoOn:
-		return c.User, nil
-	case pam.PromptEchoOff:
-		return c.Password, nil
-	}
-	return "", errors.New("unexpected")
-}
-
 func main() {
-	println("Launching Authentication Server...")
 
-	c := Credentials{
-		User:     "louis",
-		Password: "",
+	environment := flag.String("e", "dev", "")
+	flag.Usage = func() {
+		fmt.Println("Usage: server -e {mode}")
+		os.Exit(1)
 	}
-	transaction, err := pam.Start("", "", c)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = transaction.Authenticate(0)
+	flag.Parse()
+	config.Init(*environment)
+	err := server.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
