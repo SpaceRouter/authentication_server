@@ -1,10 +1,10 @@
 package middlewares
 
 import (
-	"authentication_server/config"
-	"authentication_server/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/spacerouter/authentication_server/config"
+	"github.com/spacerouter/authentication_server/models"
 	"net/http"
 	"strings"
 	"time"

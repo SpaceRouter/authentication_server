@@ -1,10 +1,10 @@
 package main
 
 import (
-	"authentication_server/config"
-	"authentication_server/server"
 	"flag"
 	"fmt"
+	"github.com/spacerouter/authentication_server/config"
+	"github.com/spacerouter/authentication_server/server"
 	"log"
 	"os"
 )
@@ -16,6 +16,7 @@ func main() {
 		fmt.Println("Usage: server -e {mode}")
 		os.Exit(1)
 	}
+
 	flag.Parse()
 	config.Init(*environment)
 	err := server.Init()

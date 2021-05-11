@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"authentication_server/middlewares"
-	"authentication_server/models"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/msteinert/pam"
+	"github.com/spacerouter/authentication_server/middlewares"
+	"github.com/spacerouter/authentication_server/models"
+	"github.com/spacerouter/pam"
 	"net/http"
 	"os/user"
 )
@@ -74,8 +74,19 @@ func (p PamController) Authenticate(c *gin.Context) {
 		}
 		groups = append(groups, gr.Name)
 	}
+	infos, err := pam.GetUserInfos(cred.Login)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to retrieve user", "error": err})
+		c.Abort()
+		return
+	}
 
-	token, err := middlewares.CreateToken(models.User{Login: cred.Login, Roles: groups})
+	token, err := middlewares.CreateToken(models.User{
+		Login:     cred.Login,
+		Roles:     groups,
+		FirstName: infos.UserInformation,
+	})
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error to create token", "error": err})
 		c.Abort()

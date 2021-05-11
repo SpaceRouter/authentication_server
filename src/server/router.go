@@ -1,9 +1,9 @@
 package server
 
 import (
-	"authentication_server/controllers"
-	"authentication_server/middlewares"
 	"github.com/gin-gonic/gin"
+	"github.com/spacerouter/authentication_server/controllers"
+	"github.com/spacerouter/authentication_server/middlewares"
 )
 
 func NewRouter() *gin.Engine {

@@ -1,6 +1,6 @@
 package server
 
-import "authentication_server/config"
+import "github.com/spacerouter/authentication_server/config"
 
 func Init() error {
 	configs := config.GetConfig()
