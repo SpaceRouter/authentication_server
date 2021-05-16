@@ -35,3 +35,10 @@ func relativePath(basedir string, path *string) {
 func GetConfig() *viper.Viper {
 	return config
 }
+
+func GetSecretKey() string {
+	configs := GetConfig()
+	key := configs.GetString("security.secret_key")
+
+	return key
+}

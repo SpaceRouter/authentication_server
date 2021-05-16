@@ -15,8 +15,6 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/SpaceRouter/pam v0.0.1 h1:5g4ZBBU6/CDT++o42uKmicwGzhLZH2IFz1aRgkJyT2U=
-github.com/SpaceRouter/pam v0.0.1/go.mod h1:5HSRremH036VDVXua0NWC4uRkiaPyMA3VTspqmwJSJo=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
@@ -181,10 +179,10 @@ github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d/go.mod h1
 github.com/smartystreets/goconvey v1.6.4 h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIKYqbNC9s=
 github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
 github.com/soheilhy/cmux v0.1.4/go.mod h1:IM3LyeVVIOuxMH7sFAkER9+bJ4dT7Ms6E4xg4kGIyLM=
-github.com/spacerouter/pam v0.0.2-0.20210510182252-abf2c8b9fd96 h1:JZbKJ16HoAEMdVcl6u8l14hcj46Ue9JGOGYrHDx0mOc=
-github.com/spacerouter/pam v0.0.2-0.20210510182252-abf2c8b9fd96/go.mod h1:1rrM8rSx2o02nSTicU6sy7hIrwvT6I7V1twuOJqGB98=
-github.com/spacerouter/pam v0.0.3-0.20210511113551-8832780a2cb4 h1:9ufrrhNM1qQXtd6UJjUgKbDssF1nuR3XAWgYaMCzTAI=
-github.com/spacerouter/pam v0.0.3-0.20210511113551-8832780a2cb4/go.mod h1:yyM4OV/8SbufPXN5tIzy02sD+tBcxk0N9sG5hkpyFDc=
+github.com/spacerouter/pam v0.0.7 h1:UELF+77qJS0Q4TovJhRQVrOwrrBt84MIHgCoXiDqzh0=
+github.com/spacerouter/pam v0.0.7/go.mod h1:3YpUeGybd1M8O79IUpdyscurTCG6cdh53kDnHXjDbVU=
+github.com/spacerouter/sr_auth v0.0.4 h1:5OR95kteE8FrWYwVJUDcT4VE52Gt5eK+j/iDcKHGyg0=
+github.com/spacerouter/sr_auth v0.0.4/go.mod h1:ejD+oM94u1cYfkOUewnODvjuUxq+dHELXcB7V4T8IFI=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spf13/afero v1.1.2 h1:m8/z1t7/fwjysjQRYbP0RD+bUIF/8tJwPdEZsI83ACI=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=

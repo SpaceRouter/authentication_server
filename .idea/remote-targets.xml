@@ -13,6 +13,11 @@
               <option name="dockerFile" value="dev.Dockerfile" />
             </BuildImageConfig>
           </option>
+          <option name="containerConfig">
+            <ContainerConfig>
+              <option name="runCliOptions" value="--rm -p 8080:8080 -v /etc/passwd:/etc/passwd -v /etc/shadow:/etc/shadow -v /etc/group:/etc/group --privileged" />
+            </ContainerConfig>
+          </option>
           <option name="projectRootOnTarget" value="/web" />
         </config>
         <ContributedStateBase type="GoLanguageRuntime">
