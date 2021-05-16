@@ -1,7 +1,16 @@
 package models
 
-import "github.com/spacerouter/sr_auth"
+type Role string
 
 const (
-	ChangeUserInfo sr_auth.Role = "chgusrinfo"
+	ChangeUserInfo Role = "chgusrinfo"
 )
+
+func HasRole(roles []Role, role Role) bool {
+	for _, uRole := range roles {
+		if role == uRole {
+			return true
+		}
+	}
+	return false
+}

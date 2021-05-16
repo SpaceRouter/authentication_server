@@ -181,8 +181,8 @@ github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9
 github.com/soheilhy/cmux v0.1.4/go.mod h1:IM3LyeVVIOuxMH7sFAkER9+bJ4dT7Ms6E4xg4kGIyLM=
 github.com/spacerouter/pam v0.0.7 h1:UELF+77qJS0Q4TovJhRQVrOwrrBt84MIHgCoXiDqzh0=
 github.com/spacerouter/pam v0.0.7/go.mod h1:3YpUeGybd1M8O79IUpdyscurTCG6cdh53kDnHXjDbVU=
-github.com/spacerouter/sr_auth v0.0.4 h1:5OR95kteE8FrWYwVJUDcT4VE52Gt5eK+j/iDcKHGyg0=
-github.com/spacerouter/sr_auth v0.0.4/go.mod h1:ejD+oM94u1cYfkOUewnODvjuUxq+dHELXcB7V4T8IFI=
+github.com/spacerouter/sr_auth v0.0.5 h1:3uRqEwFCABMzJAnYplNyoQ2D+UfZauyyb7d+2M7sdVs=
+github.com/spacerouter/sr_auth v0.0.5/go.mod h1:ejD+oM94u1cYfkOUewnODvjuUxq+dHELXcB7V4T8IFI=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spf13/afero v1.1.2 h1:m8/z1t7/fwjysjQRYbP0RD+bUIF/8tJwPdEZsI83ACI=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=

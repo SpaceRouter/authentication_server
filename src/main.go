@@ -7,9 +7,16 @@ import (
 	"github.com/spacerouter/authentication_server/server"
 	"log"
 	"os"
+	"os/user"
 )
 
 func main() {
+	user, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Run as %s \n", user.Username)
 
 	environment := flag.String("e", "dev", "")
 	flag.Usage = func() {
@@ -19,7 +26,7 @@ func main() {
 
 	flag.Parse()
 	config.Init(*environment)
-	err := server.Init()
+	err = server.Init()
 	if err != nil {
 		log.Fatal(err)
 	}

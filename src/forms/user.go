@@ -1,6 +1,8 @@
 package forms
 
-import "github.com/spacerouter/authentication_server/models"
+import (
+	"github.com/spacerouter/authentication_server/models"
+)
 
 type UserLogin struct {
 	models.Credential
@@ -13,10 +15,7 @@ type UserLoginResponse struct {
 }
 
 type UserCreate struct {
-	User     string
-	Password string
-	Email    string
-	Roles    []string
+	models.User
 }
 
 type UserChangeRole struct {
@@ -32,4 +31,16 @@ type UserChangePassword struct {
 type UserChangesResponse struct {
 	Message string
 	Ok      bool
+}
+
+type UserRolesResponse struct {
+	Message string
+	Ok      bool
+	Roles   []models.Role
+}
+
+type UserInfoResponse struct {
+	Message string
+	Ok      bool
+	User    models.User
 }

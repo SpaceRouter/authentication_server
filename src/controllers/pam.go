@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spacerouter/authentication_server/forms"
 	"github.com/spacerouter/authentication_server/models"
+	"github.com/spacerouter/authentication_server/utils"
 	"github.com/spacerouter/pam"
-	"github.com/spacerouter/sr_auth"
 	"net/http"
 	"os/user"
 	"strings"
@@ -16,14 +16,15 @@ import (
 var BadRequestMessage = "Your request does not meet the expectations of the server"
 
 type PamController struct {
-	Auth sr_auth.Auth
+	Key    string
+	Issuer string
 }
 
 type Credential struct {
 	models.Credential
 }
 
-func (c Credential) RespondPAM(s pam.Style, msg string) (string, error) {
+func (c *Credential) RespondPAM(s pam.Style, msg string) (string, error) {
 	switch s {
 	case pam.PromptEchoOn:
 		return c.Login, nil
@@ -33,7 +34,7 @@ func (c Credential) RespondPAM(s pam.Style, msg string) (string, error) {
 	return "", errors.New("unexpected")
 }
 
-func (p PamController) Authenticate(c *gin.Context) {
+func (p *PamController) Authenticate(c *gin.Context) {
 	loginForm := forms.UserLogin{}
 	err := c.BindJSON(&loginForm)
 	if err != nil {
@@ -42,7 +43,7 @@ func (p PamController) Authenticate(c *gin.Context) {
 		return
 	}
 
-	t, err := pam.Start("", "", Credential{loginForm.Credential})
+	t, err := pam.Start("", "", &Credential{loginForm.Credential})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserLoginResponse{
 			Message: fmt.Sprintf("User doesn't exist \nError : %s", err),
@@ -59,16 +60,6 @@ func (p PamController) Authenticate(c *gin.Context) {
 		return
 	}
 
-	roles, err := GetUserRoles(loginForm.Login)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, forms.UserLoginResponse{
-			Message: fmt.Sprintf("Cannot get roles \nError : %s", err),
-			Ok:      false,
-		})
-		c.Abort()
-		return
-	}
-
 	infos, err := pam.GetUserInfos(loginForm.Login)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserLoginResponse{
@@ -79,9 +70,7 @@ func (p PamController) Authenticate(c *gin.Context) {
 		return
 	}
 
-	userInfo := InfoToUser(*infos, roles)
-
-	token, err := p.Auth.CreateToken(userInfo, "spacerouter")
+	token, err := utils.CreateToken(infos.Username, p.Issuer, p.Key)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserLoginResponse{
@@ -95,7 +84,7 @@ func (p PamController) Authenticate(c *gin.Context) {
 	c.JSON(http.StatusOK, forms.UserLoginResponse{Ok: true, Token: token})
 }
 
-func (p PamController) UpdatePassword(c *gin.Context) {
+func (p *PamController) UpdatePassword(c *gin.Context) {
 	chgPwdForm := forms.UserChangePassword{}
 	err := c.BindJSON(&chgPwdForm)
 	if err != nil {
@@ -117,8 +106,19 @@ func (p PamController) UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	u := uI.(sr_auth.User)
-	if !u.HasRole(models.ChangeUserInfo) && chgPwdForm.User != u.Login {
+	username := uI.(string)
+
+	roles, err := GetUserRoles(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
+			Message: fmt.Sprintf("Cannot get roles \nError : %s", err),
+			Ok:      false,
+		})
+		c.Abort()
+		return
+	}
+
+	if !models.HasRole(roles, models.ChangeUserInfo) && chgPwdForm.User != username {
 		c.JSON(http.StatusUnauthorized, forms.UserChangesResponse{
 			Ok:      false,
 			Message: fmt.Sprintf("You are not authorized to modify this user \nError : %s", err),
@@ -127,7 +127,7 @@ func (p PamController) UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	err = pam.ChangePassword(u.Login, chgPwdForm.Password)
+	err = pam.ChangePassword(username, chgPwdForm.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserChangesResponse{
 			Ok:      false,
@@ -143,10 +143,66 @@ func (p PamController) UpdatePassword(c *gin.Context) {
 	})
 }
 
-func InfoToUser(info pam.UserInfo, roles []sr_auth.Role) sr_auth.User {
-	userI := sr_auth.User{
+func GetInfo(c *gin.Context) {
+	info, exist := c.Get("user")
+	if !exist {
+		c.AbortWithStatus(500)
+		return
+	}
+
+	username := info.(string)
+
+	userInfo, err := pam.GetUserInfos(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, forms.UserInfoResponse{
+			Ok:      false,
+			Message: fmt.Sprintf("Cannot change password \nError : %s", err),
+		})
+		c.Abort()
+		return
+	}
+
+	u := UserInfoToUser(userInfo)
+
+	c.JSON(200, forms.UserInfoResponse{
+		Ok:      true,
+		Message: "Ok",
+		User:    u,
+	})
+}
+
+func (p *PamController) GetUserRule(c *gin.Context) {
+	uI, exist := c.Get("user")
+	if !exist {
+		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
+			Ok:      false,
+			Message: fmt.Sprintf("Cannot get session user \nError : User doesn't exist"),
+		})
+		c.Abort()
+		return
+	}
+
+	username := uI.(string)
+	roles, err := GetUserRoles(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
+			Message: fmt.Sprintf("Cannot get roles \nError : %s", err),
+			Ok:      false,
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, forms.UserRolesResponse{
+		Roles:   roles,
+		Ok:      true,
+		Message: "Ok",
+	})
+}
+
+func UserInfoToUser(info *pam.UserInfo) models.User {
+	userI := models.User{
 		Login: info.Username,
-		Roles: roles,
 	}
 
 	uInfo := strings.Split(info.UserInformation, ",")
@@ -159,7 +215,7 @@ func InfoToUser(info pam.UserInfo, roles []sr_auth.Role) sr_auth.User {
 	return userI
 }
 
-func GetUserRoles(username string) ([]sr_auth.Role, error) {
+func GetUserRoles(username string) ([]models.Role, error) {
 	lookup, err := user.Lookup(username)
 	if err != nil {
 		return nil, err
@@ -170,13 +226,13 @@ func GetUserRoles(username string) ([]sr_auth.Role, error) {
 		return nil, fmt.Errorf("cannot reach group Ids : %s", err.Error())
 	}
 
-	var groups []sr_auth.Role
+	var groups []models.Role
 	for _, group := range groupIds {
 		gr, err := user.LookupGroupId(group)
 		if err != nil {
 			return nil, fmt.Errorf("cannot convert id to name %s : %s", group, err.Error())
 		}
-		groups = append(groups, sr_auth.Role(gr.Name))
+		groups = append(groups, models.Role(gr.Name))
 	}
 
 	return groups, nil
