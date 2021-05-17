@@ -46,7 +46,7 @@ func (p *PamController) Authenticate(c *gin.Context) {
 	t, err := pam.Start("", "", &Credential{loginForm.Credential})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserLoginResponse{
-			Message: fmt.Sprintf("User doesn't exist \nError : %s", err),
+			Message: fmt.Sprintf("UserInfo doesn't exist \nError : %s", err),
 			Ok:      false,
 		})
 		c.Abort()
@@ -165,9 +165,9 @@ func GetInfo(c *gin.Context) {
 	u := UserInfoToUser(userInfo)
 
 	c.JSON(200, forms.UserInfoResponse{
-		Ok:      true,
-		Message: "Ok",
-		User:    u,
+		Ok:       true,
+		Message:  "Ok",
+		UserInfo: u,
 	})
 }
 
@@ -176,7 +176,7 @@ func (p *PamController) GetUserRule(c *gin.Context) {
 	if !exist {
 		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
 			Ok:      false,
-			Message: fmt.Sprintf("Cannot get session user \nError : User doesn't exist"),
+			Message: fmt.Sprintf("Cannot get session user \nError : UserInfo doesn't exist"),
 		})
 		c.Abort()
 		return
@@ -200,8 +200,8 @@ func (p *PamController) GetUserRule(c *gin.Context) {
 	})
 }
 
-func UserInfoToUser(info *pam.UserInfo) models.User {
-	userI := models.User{
+func UserInfoToUser(info *pam.UserInfo) models.UserInfo {
+	userI := models.UserInfo{
 		Login: info.Username,
 	}
 

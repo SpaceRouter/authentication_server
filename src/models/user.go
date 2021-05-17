@@ -5,7 +5,7 @@ type Credential struct {
 	Password string
 }
 
-type User struct {
+type UserInfo struct {
 	Login     string
 	FirstName string
 	LastName  string

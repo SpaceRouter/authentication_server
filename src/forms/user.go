@@ -15,7 +15,7 @@ type UserLoginResponse struct {
 }
 
 type UserCreate struct {
-	models.User
+	models.UserInfo
 }
 
 type UserChangeRole struct {
@@ -40,7 +40,7 @@ type UserRolesResponse struct {
 }
 
 type UserInfoResponse struct {
-	Message string
-	Ok      bool
-	User    models.User
+	Message  string
+	Ok       bool
+	UserInfo models.UserInfo
 }
