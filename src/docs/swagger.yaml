@@ -1,0 +1,213 @@
+basePath: /
+definitions:
+  forms.UserChangePassword:
+    properties:
+      password:
+        type: string
+      user:
+        type: string
+    type: object
+  forms.UserChangesResponse:
+    properties:
+      message:
+        type: string
+      ok:
+        type: boolean
+    type: object
+  forms.UserInfoResponse:
+    properties:
+      message:
+        type: string
+      ok:
+        type: boolean
+      userInfo:
+        $ref: '#/definitions/models.UserInfo'
+    type: object
+  forms.UserLogin:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  forms.UserLoginResponse:
+    properties:
+      message:
+        type: string
+      ok:
+        type: boolean
+      token:
+        type: string
+    type: object
+  forms.UserRolesResponse:
+    properties:
+      message:
+        type: string
+      ok:
+        type: boolean
+      roles:
+        items:
+          type: string
+        type: array
+    type: object
+  models.UserInfo:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      login:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: contact@esieespace.fr
+    name: ESIEESPACE Network
+    url: http://esieespace.fr
+  description: Authentication Server API.
+  license:
+    name: GPL-3.0
+    url: https://github.com/SpaceRouter/authentication_server/blob/louis/LICENSE
+  title: SpaceRouter Authentication Server
+  version: "0.1"
+paths:
+  /health:
+    get:
+      description: get Ok
+      operationId: status
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Check server health
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Get authentication token with login and password
+      operationId: authenticate
+      parameters:
+      - description: User credentials
+        in: body
+        name: UserLogin
+        schema:
+          $ref: '#/definitions/forms.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserLoginResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserLoginResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserLoginResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserLoginResponse'
+      summary: Get authentication token
+  /v1/info:
+    get:
+      description: Get connected user information
+      operationId: get_info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserInfoResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserInfoResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserInfoResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserInfoResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user info
+  /v1/roles:
+    get:
+      description: Get connected user roles
+      operationId: get_roles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user roles
+  /v1/update_password:
+    post:
+      consumes:
+      - application/json
+      description: Update user password using username and new password
+      operationId: update_password
+      parameters:
+      - description: User password change
+        in: body
+        name: UserLogin
+        schema:
+          $ref: '#/definitions/forms.UserChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserChangesResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserChangesResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserChangesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserChangesResponse'
+      security:
+      - ApiKeyAuth: []
+      - "": []
+      summary: Change user password
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

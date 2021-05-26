@@ -28,6 +28,18 @@
           </config>
         </ContributedStateBase>
       </target>
+      <target name="WSL - Ubuntu-20.04" type="wsl">
+        <config>
+          <option name="distributionMsId" value="Ubuntu-20.04" />
+          <option name="projectRootOnTarget" value="/mnt/c/Users/ldesp/AppData/Local/JetBrains/Toolbox/apps/Goland/ch-0/211.7142.13/jbr/bin&#10;/authentication_server" />
+        </config>
+        <ContributedStateBase type="GoLanguageRuntime">
+          <config>
+            <option name="goRoot" value="/usr/local/go/bin/go" />
+            <option name="goVersion" value="go1.16.4 linux/amd64" />
+          </config>
+        </ContributedStateBase>
+      </target>
     </targets>
   </component>
 </project>

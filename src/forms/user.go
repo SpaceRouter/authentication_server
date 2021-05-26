@@ -9,9 +9,9 @@ type UserLogin struct {
 }
 
 type UserLoginResponse struct {
-	Message string
-	Ok      bool
-	Token   string
+	Message string `json:"message"`
+	Ok      bool   `json:"ok"`
+	Token   string `json:"token"`
 }
 
 type UserCreate struct {
@@ -19,24 +19,24 @@ type UserCreate struct {
 }
 
 type UserChangeRole struct {
-	User string
-	Role string
+	User string `json:"user"`
+	Role string `json:"role"`
 }
 
 type UserChangePassword struct {
-	User     string
-	Password string
+	User     string `json:"user"`
+	Password string `json:"password"`
 }
 
 type UserChangesResponse struct {
-	Message string
-	Ok      bool
+	Message string `json:"message"`
+	Ok      bool   `json:"ok"`
 }
 
 type UserRolesResponse struct {
-	Message string
-	Ok      bool
-	Roles   []models.Role
+	Message string        `json:"message"`
+	Ok      bool          `json:"ok"`
+	Roles   []models.Role `json:"roles"`
 }
 
 type UserInfoResponse struct {

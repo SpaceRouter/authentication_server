@@ -1,0 +1,331 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Authentication Server API.",
+        "title": "SpaceRouter Authentication Server",
+        "contact": {
+            "name": "ESIEESPACE Network",
+            "url": "http://esieespace.fr",
+            "email": "contact@esieespace.fr"
+        },
+        "license": {
+            "name": "GPL-3.0",
+            "url": "https://github.com/SpaceRouter/authentication_server/blob/louis/LICENSE"
+        },
+        "version": "0.1"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "get Ok",
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Check server health",
+                "operationId": "status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Get authentication token with login and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get authentication token",
+                "operationId": "authenticate",
+                "parameters": [
+                    {
+                        "description": "User credentials",
+                        "name": "UserLogin",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserLoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserLoginResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserLoginResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserLoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get connected user information",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user info",
+                "operationId": "get_info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserInfoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserInfoResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserInfoResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/roles": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get connected user roles",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user roles",
+                "operationId": "get_roles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/update_password": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "": []
+                    }
+                ],
+                "description": "Update user password using username and new password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Change user password",
+                "operationId": "update_password",
+                "parameters": [
+                    {
+                        "description": "User password change",
+                        "name": "UserLogin",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserChangePassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserChangesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserChangesResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserChangesResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserChangesResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "forms.UserChangePassword": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "user": {
+                    "type": "string"
+                }
+            }
+        },
+        "forms.UserChangesResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "forms.UserInfoResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                },
+                "userInfo": {
+                    "$ref": "#/definitions/models.UserInfo"
+                }
+            }
+        },
+        "forms.UserLogin": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "forms.UserLoginResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "forms.UserRolesResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "models.UserInfo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

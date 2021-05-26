@@ -16,7 +16,7 @@ func Auth(key string) gin.HandlerFunc {
 
 		u, err := utils.GetUsernameFromToken(tokenString, key)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"Message": err.Error()})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Message": err.Error()})
 			return
 		}
 

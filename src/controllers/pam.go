@@ -34,6 +34,16 @@ func (c *Credential) RespondPAM(s pam.Style, msg string) (string, error) {
 	return "", errors.New("unexpected")
 }
 
+// Authenticate godoc
+// @Summary Get authentication token
+// @Description Get authentication token with login and password
+// @ID authenticate
+// @Param UserLogin body forms.UserLogin false "User credentials"
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} forms.UserLoginResponse
+// @Failure 500,400,401 {object} forms.UserLoginResponse
+// @Router /login [post]
 func (p *PamController) Authenticate(c *gin.Context) {
 	loginForm := forms.UserLogin{}
 	err := c.BindJSON(&loginForm)
@@ -84,6 +94,18 @@ func (p *PamController) Authenticate(c *gin.Context) {
 	c.JSON(http.StatusOK, forms.UserLoginResponse{Ok: true, Token: token})
 }
 
+// UpdatePassword godoc
+// @Summary Change user password
+// @Description Update user password using username and new password
+// @ID update_password
+// @Security ApiKeyAuth
+// @Param UserLogin body forms.UserChangePassword false "User password change"
+// @Accept  json
+// @Produce  json
+// @Security
+// @Success 200 {object} forms.UserChangesResponse
+// @Failure 500,400,401 {object} forms.UserChangesResponse
+// @Router /v1/update_password [post]
 func (p *PamController) UpdatePassword(c *gin.Context) {
 	chgPwdForm := forms.UserChangePassword{}
 	err := c.BindJSON(&chgPwdForm)
@@ -143,6 +165,15 @@ func (p *PamController) UpdatePassword(c *gin.Context) {
 	})
 }
 
+// GetInfo godoc
+// @Summary Get user info
+// @Description Get connected user information
+// @ID get_info
+// @Security ApiKeyAuth
+// @Produce  json
+// @Success 200 {object} forms.UserInfoResponse
+// @Failure 500,400,401 {object} forms.UserInfoResponse
+// @Router /v1/info [get]
 func GetInfo(c *gin.Context) {
 	info, exist := c.Get("user")
 	if !exist {
@@ -171,6 +202,15 @@ func GetInfo(c *gin.Context) {
 	})
 }
 
+// GetUserRule godoc
+// @Summary Get user roles
+// @Description Get connected user roles
+// @ID get_roles
+// @Security ApiKeyAuth
+// @Produce  json
+// @Success 200 {object} forms.UserRolesResponse
+// @Failure 500,400,401 {object} forms.UserRolesResponse
+// @Router /v1/roles [get]
 func (p *PamController) GetUserRule(c *gin.Context) {
 	uI, exist := c.Get("user")
 	if !exist {
