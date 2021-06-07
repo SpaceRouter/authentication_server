@@ -13,6 +13,7 @@ type customClaims struct {
 func CreateToken(username string, issuer string, key string) (string, error) {
 	var claim = jwt.StandardClaims{
 		ExpiresAt: time.Now().AddDate(0, 0, 1).Unix(),
+		IssuedAt:  time.Now().Unix(),
 		Issuer:    issuer,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, customClaims{

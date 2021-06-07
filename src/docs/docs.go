@@ -140,19 +140,60 @@ var doc = `{
                 }
             }
         },
-        "/v1/roles": {
+        "/v1/permissions": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get connected user roles",
+                "description": "Get connected user permissions",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get user roles",
-                "operationId": "get_roles",
+                "summary": "Get user permissions",
+                "operationId": "get_permissions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/role": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get connected user role",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user role",
+                "operationId": "get_role",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -237,6 +278,88 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/v1/user/{username}/permissions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get connected user permissions",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user permissions",
+                "operationId": "get_permissions2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserPermissionsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/user/{username}/role": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get connected user role",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user role",
+                "operationId": "get_roles2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/forms.UserRolesResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -301,6 +424,26 @@ var doc = `{
                 }
             }
         },
+        "forms.UserPermissionsResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "ok": {
+                    "type": "boolean"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
         "forms.UserRolesResponse": {
             "type": "object",
             "properties": {
@@ -310,11 +453,8 @@ var doc = `{
                 "ok": {
                     "type": "boolean"
                 },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "role": {
+                    "type": "string"
                 }
             }
         },

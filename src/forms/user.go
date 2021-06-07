@@ -34,13 +34,20 @@ type UserChangesResponse struct {
 }
 
 type UserRolesResponse struct {
-	Message string        `json:"message"`
-	Ok      bool          `json:"ok"`
-	Roles   []models.Role `json:"roles"`
+	Message string      `json:"message"`
+	Ok      bool        `json:"ok"`
+	Role    models.Role `json:"role"`
 }
 
 type UserInfoResponse struct {
 	Message  string
 	Ok       bool
 	UserInfo models.UserInfo
+}
+
+type UserPermissionsResponse struct {
+	Message     string
+	Ok          bool
+	Role        models.Role
+	Permissions []models.Permission
 }

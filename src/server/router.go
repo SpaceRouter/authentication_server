@@ -42,8 +42,16 @@ func NewRouter() *gin.Engine {
 		v1.Use(middleware.Auth(config.GetSecretKey()))
 		v1.GET("/info", controllers.GetInfo)
 
-		v1.GET("/roles", pam.GetUserRule)
+		v1.GET("/role", pam.GetUserRole)
+		v1.GET("/permissions", pam.GetUserPermissions)
+
 		v1.POST("/update_password", pam.UpdatePassword)
+
+		user := v1.Group("user")
+		{
+			user.GET(":name/permissions", pam.GetUserPermissions)
+			user.GET(":name/role", pam.GetUserRole)
+		}
 	}
 	return router
 

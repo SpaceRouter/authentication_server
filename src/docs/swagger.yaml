@@ -39,16 +39,27 @@ definitions:
       token:
         type: string
     type: object
+  forms.UserPermissionsResponse:
+    properties:
+      message:
+        type: string
+      ok:
+        type: boolean
+      permissions:
+        items:
+          type: string
+        type: array
+      role:
+        type: string
+    type: object
   forms.UserRolesResponse:
     properties:
       message:
         type: string
       ok:
         type: boolean
-      roles:
-        items:
-          type: string
-        type: array
+      role:
+        type: string
     type: object
   models.UserInfo:
     properties:
@@ -144,10 +155,36 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get user info
-  /v1/roles:
+  /v1/permissions:
     get:
-      description: Get connected user roles
-      operationId: get_roles
+      description: Get connected user permissions
+      operationId: get_permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user permissions
+  /v1/role:
+    get:
+      description: Get connected user role
+      operationId: get_role
       produces:
       - application/json
       responses:
@@ -169,7 +206,7 @@ paths:
             $ref: '#/definitions/forms.UserRolesResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get user roles
+      summary: Get user role
   /v1/update_password:
     post:
       consumes:
@@ -205,6 +242,58 @@ paths:
       - ApiKeyAuth: []
       - "": []
       summary: Change user password
+  /v1/user/{username}/permissions:
+    get:
+      description: Get connected user permissions
+      operationId: get_permissions2
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserPermissionsResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user permissions
+  /v1/user/{username}/role:
+    get:
+      description: Get connected user role
+      operationId: get_roles2
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "400":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "401":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/forms.UserRolesResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user role
 securityDefinitions:
   ApiKeyAuth:
     in: header

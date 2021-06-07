@@ -9,7 +9,6 @@ import (
 	"github.com/spacerouter/authentication_server/utils"
 	"github.com/spacerouter/pam"
 	"net/http"
-	"os/user"
 	"strings"
 )
 
@@ -130,25 +129,6 @@ func (p *PamController) UpdatePassword(c *gin.Context) {
 
 	username := uI.(string)
 
-	roles, err := GetUserRoles(username)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
-			Message: fmt.Sprintf("Cannot get roles \nError : %s", err),
-			Ok:      false,
-		})
-		c.Abort()
-		return
-	}
-
-	if !models.HasRole(roles, models.ChangeUserInfo) && chgPwdForm.User != username {
-		c.JSON(http.StatusUnauthorized, forms.UserChangesResponse{
-			Ok:      false,
-			Message: fmt.Sprintf("You are not authorized to modify this user \nError : %s", err),
-		})
-		c.Abort()
-		return
-	}
-
 	err = pam.ChangePassword(username, chgPwdForm.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserChangesResponse{
@@ -202,16 +182,16 @@ func GetInfo(c *gin.Context) {
 	})
 }
 
-// GetUserRule godoc
-// @Summary Get user roles
-// @Description Get connected user roles
-// @ID get_roles
+// GetUserRole godoc
+// @Summary Get user role
+// @Description Get connected user role
+// @ID get_role
 // @Security ApiKeyAuth
 // @Produce  json
 // @Success 200 {object} forms.UserRolesResponse
 // @Failure 500,400,401 {object} forms.UserRolesResponse
-// @Router /v1/roles [get]
-func (p *PamController) GetUserRule(c *gin.Context) {
+// @Router /v1/role [get]
+func (p *PamController) GetUserRole(c *gin.Context) {
 	uI, exist := c.Get("user")
 	if !exist {
 		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
@@ -223,7 +203,7 @@ func (p *PamController) GetUserRule(c *gin.Context) {
 	}
 
 	username := uI.(string)
-	roles, err := GetUserRoles(username)
+	role, err := utils.GetUserRole(username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, forms.UserRolesResponse{
 			Message: fmt.Sprintf("Cannot get roles \nError : %s", err),
@@ -234,10 +214,86 @@ func (p *PamController) GetUserRule(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, forms.UserRolesResponse{
-		Roles:   roles,
+		Role:    *role,
 		Ok:      true,
 		Message: "Ok",
 	})
+}
+
+// GetUserRole2 godoc
+// @Summary Get user role
+// @Description Get connected user role
+// @ID get_roles2
+// @Security ApiKeyAuth
+// @Produce  json
+// @Success 200 {object} forms.UserRolesResponse
+// @Failure 500,400,401 {object} forms.UserRolesResponse
+// @Router /v1/user/{username}/role [get]
+func (p *PamController) GetUserRole2(c *gin.Context) {
+	p.GetUserRole(c)
+}
+
+// GetUserPermissions godoc
+// @Summary Get user permissions
+// @Description Get connected user permissions
+// @ID get_permissions
+// @Security ApiKeyAuth
+// @Produce  json
+// @Success 200 {object} forms.UserPermissionsResponse
+// @Failure 500,400,401 {object} forms.UserPermissionsResponse
+// @Router /v1/permissions [get]
+func (p *PamController) GetUserPermissions(c *gin.Context) {
+
+	username := c.Param("name")
+
+	if username == "" {
+		info, exist := c.Get("user")
+		if !exist {
+			c.AbortWithStatus(500)
+			return
+		}
+		username = info.(string)
+	}
+
+	role, err := utils.GetUserRole(username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, forms.UserPermissionsResponse{
+			Ok:      false,
+			Message: fmt.Sprintf("Can't get user role \nError : %s", err),
+		})
+		c.Abort()
+		return
+	}
+
+	permissions, err := utils.GetRolePermissions(*role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, forms.UserPermissionsResponse{
+			Ok:      false,
+			Message: fmt.Sprintf("Can't get user permissions \nError : %s", err),
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(200, forms.UserPermissionsResponse{
+		Ok:          true,
+		Message:     "Ok",
+		Role:        *role,
+		Permissions: permissions,
+	})
+}
+
+// GetUserPermissions2 godoc
+// @Summary Get user permissions
+// @Description Get connected user permissions
+// @ID get_permissions2
+// @Security ApiKeyAuth
+// @Produce  json
+// @Success 200 {object} forms.UserPermissionsResponse
+// @Failure 500,400,401 {object} forms.UserPermissionsResponse
+// @Router /v1/user/{username}/permissions [get]
+func (p *PamController) GetUserPermissions2(c *gin.Context) {
+	p.GetUserPermissions(c)
 }
 
 func UserInfoToUser(info *pam.UserInfo) models.UserInfo {
@@ -253,27 +309,4 @@ func UserInfoToUser(info *pam.UserInfo) models.UserInfo {
 		userI.Email = uInfo[4]
 	}
 	return userI
-}
-
-func GetUserRoles(username string) ([]models.Role, error) {
-	lookup, err := user.Lookup(username)
-	if err != nil {
-		return nil, err
-	}
-
-	groupIds, err := lookup.GroupIds()
-	if err != nil {
-		return nil, fmt.Errorf("cannot reach group Ids : %s", err.Error())
-	}
-
-	var groups []models.Role
-	for _, group := range groupIds {
-		gr, err := user.LookupGroupId(group)
-		if err != nil {
-			return nil, fmt.Errorf("cannot convert id to name %s : %s", group, err.Error())
-		}
-		groups = append(groups, models.Role(gr.Name))
-	}
-
-	return groups, nil
 }
