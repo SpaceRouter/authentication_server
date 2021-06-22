@@ -24,33 +24,37 @@ func NewRouter() *gin.Engine {
 		ValidateHeaders: false,
 	}))
 
-	health := new(controllers.HealthController)
-
-	router.GET("/health", health.Status)
-
-	pam := controllers.PamController{
-		Key:    config.GetSecretKey(),
-		Issuer: "spacerouter",
-	}
-
-	router.POST("/login", pam.Authenticate)
-	router.POST("/tea", controllers.GetTea)
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	v1 := router.Group("v1")
+	main := router.Group("auth")
 	{
-		v1.Use(middleware.Auth(config.GetSecretKey()))
-		v1.GET("/info", controllers.GetInfo)
 
-		v1.GET("/role", pam.GetUserRole)
-		v1.GET("/permissions", pam.GetUserPermissions)
+		health := new(controllers.HealthController)
 
-		v1.POST("/update_password", pam.UpdatePassword)
+		main.GET("/health", health.Status)
 
-		user := v1.Group("user")
+		pam := controllers.PamController{
+			Key:    config.GetSecretKey(),
+			Issuer: "spacerouter",
+		}
+
+		main.POST("/login", pam.Authenticate)
+		main.POST("/tea", controllers.GetTea)
+		main.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+		v1 := main.Group("v1")
 		{
-			user.GET(":name/permissions", pam.GetUserPermissions)
-			user.GET(":name/role", pam.GetUserRole)
+			v1.Use(middleware.Auth(config.GetSecretKey()))
+			v1.GET("/info", controllers.GetInfo)
+
+			v1.GET("/role", pam.GetUserRole)
+			v1.GET("/permissions", pam.GetUserPermissions)
+
+			v1.POST("/update_password", pam.UpdatePassword)
+
+			user := v1.Group("user")
+			{
+				user.GET(":name/permissions", pam.GetUserPermissions)
+				user.GET(":name/role", pam.GetUserRole)
+			}
 		}
 	}
 	return router
