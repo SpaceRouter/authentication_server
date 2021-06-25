@@ -3,13 +3,22 @@ VERSION=0.0.1
 
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
+RELEASE_PACKAGE:=ldesplanche/auth_server
+
+DOCKER_ARGS:=-v /var/run/docker.sock:/var/run/docker.sock -v ./compose:/compose -p 8082:8082
+
 .PHONY: docker
 docker:
-	@docker run -v "$(ROOT_DIR)/src":"/web" -p 8080:8080 --name "auth_server_dev" --rm ldesplanche/auth_server_dev
+	@docker run -v "$(ROOT_DIR)/src":"/web" $(DOCKER_ARGS) -p 8080:8080 --name "$(RELEASE_PACKAGE)_dev" --rm ldesplanche/marketplace_dev
+
+.PHONY: release
+release:
+	@docker build . -t $(RELEASE_PACKAGE)
+	@docker push $(RELEASE_PACKAGE)
 
 .PHONY: docker-dev-image
 docker-dev-image:
-	@docker build -t ldesplanche/auth_server_dev - < dev.Dockerfile
+	@docker build -t $(RELEASE_PACKAGE)_dev - < dev.Dockerfile
 
 .PHONY: build
 ## build: Compile the packages.

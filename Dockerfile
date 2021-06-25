@@ -1,11 +1,13 @@
-FROM golang
+FROM golang:alpine
 
 COPY src /source
 WORKDIR /source
 
-RUN apt update && apt install libpam0g-dev -y && apt clean
-RUN go get
-RUN go build -o /usr/bin/auth_server
+RUN apk add gcc --no-cache --purge -uU linux-pam-dev musl-dev
+
+RUN go get && \
+    go build -o /usr/bin/auth_server && \
+    rm $GOPATH -rf
 
 RUN mkdir /config && cp config/*.yaml /config -r
 
